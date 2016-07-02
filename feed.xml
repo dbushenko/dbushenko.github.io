@@ -5,9 +5,109 @@
     <description>Блог о Clojure и других технологиях, связанных на Lisp.</description>
     <link>http://clojure.by/</link>
     <atom:link href="http://clojure.by/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 01 Jul 2016 11:59:02 +0300</pubDate>
-    <lastBuildDate>Fri, 01 Jul 2016 11:59:02 +0300</lastBuildDate>
+    <pubDate>Sun, 03 Jul 2016 00:11:27 +0300</pubDate>
+    <lastBuildDate>Sun, 03 Jul 2016 00:11:27 +0300</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>Top-down разработка с Midje</title>
+        <description>&lt;h3 id=&quot;wishful-thinking&quot;&gt;Wishful thinking&lt;/h3&gt;
+
+&lt;p&gt;В документации по Midje есть вводная &lt;a href=&quot;https://github.com/marick/Midje/wiki/The-idea-behind-top-down-development&quot;&gt;статья&lt;/a&gt; о top-down development. Именно в ней показывается, что библиотека Midje подходит для разработки на Clojure как нельзя лучше.&lt;/p&gt;
+
+&lt;p&gt;Идею wishful thinking предложили в &lt;a href=&quot;#book1&quot;&gt;[1]&lt;/a&gt; уже несколько десятилетий назад, в подробностях алгоритм разработки в стиле wishful thinking можно найти в &lt;a href=&quot;#book2&quot;&gt;[2]&lt;/a&gt;. Смысл идеи состоит в следующем. Предположим, нам необходимо решить какую-то задачу в некоторой предметной области. Традиционный подход состоит в том, чтобы выполнить декомпозицию задачи на подзадачи, а те – на другие подзадачи до тех пор, пока все подзадачи не станут досаточно простыми для реализации. Wishful thinking идет немного иным путем. Мы представляем, что уже есть некоторый API или предметно-ориентированный язык, моделирующий предметную область. И, представив, что этот API уже есть, решаем с его помощью задачу. Затем – реализуем все несуществующие функции этого API.&lt;/p&gt;
+
+&lt;p&gt;Midje позволяет смоделировать этот несуществующий API и отложить его реализацию на самый последний этап разработки. Например, для реализации &lt;em&gt;some-func&lt;/em&gt; нам необходимы функции из несуществующего API: &lt;em&gt;api-func1&lt;/em&gt; и &lt;em&gt;api-func2&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p class=&quot;notice&quot;&gt;&lt;em&gt;На заметку:&lt;/em&gt; указанные функции могут быть не реализованы, но объявить их всё же нужно.&lt;/p&gt;
+
+&lt;p&gt;Мы пишем тело &lt;em&gt;some-func&lt;/em&gt; так, будто &lt;em&gt;api-func1&lt;/em&gt; и &lt;em&gt;api-func2&lt;/em&gt; уже готовы, а затем пишем такой тест:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;facts&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;факты о функции &#39;some-func&#39;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&#39;some-func&#39; работает на несуществующем API&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;some-func&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;arg2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;42&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;provided&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;api-func1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;api-func2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;arg2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;42&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Обратите внимание на секцию &lt;em&gt;provided&lt;/em&gt;. Именно там мы определяем, как должны вести себя нереализованные &lt;em&gt;api-func1&lt;/em&gt; и &lt;em&gt;api-func2&lt;/em&gt;. Мы указываем, на каких аргументах вызываются эти функции и что они должны вернуть.&lt;/p&gt;
+
+&lt;p&gt;Таким образом, мы можем вначале реализовать &lt;em&gt;some-func&lt;/em&gt;, и только потом – &lt;em&gt;api-func1&lt;/em&gt; и &lt;em&gt;api-func2&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;Фиктивные функции и значения&lt;/h3&gt;
+
+&lt;p&gt;Показанный выше способ определения фиктивных функций работает в точности, как известный Java-фреймворк &lt;a href=&quot;http://mockito.org/&quot;&gt;Mockito&lt;/a&gt;. Но, помимо фиктивных функций Midje позволяет подставлять и фиктивные значения.&lt;/p&gt;
+
+&lt;p&gt;В примере выше указаны нормальные значения, которые передаются в функции и получаются из них. Но, если неважны конкретные значения, передаваемые в API, можно писать следующим образом.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;facts&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;факты о функции &#39;some-func&#39;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&#39;some-func&#39; работает на несуществующем API&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;some-func&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;..ARG2..&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;..RESULT..&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;provided&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;api-func1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;anything&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;api-func2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;..ARG2..&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;..RESULT..&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Здесь &lt;em&gt;anything&lt;/em&gt; означает любой, неважно какой аргумент. &lt;em&gt;..ARG2..&lt;/em&gt; и &lt;em&gt;..RESULT..&lt;/em&gt; – метазначения. Их нужно использовать тогда, когда не важно содержимое, а важно только, чтобы оно было одинаковым везде, где используется одинаковое название метазначения.&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;Некоторые особенности&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Midje предлагает очень удобный механизм &lt;a href=&quot;https://github.com/marick/Midje/wiki/Autotest&quot;&gt;автотестов&lt;/a&gt;. В REPL нужно сделать следующее:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;midje.repl&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:refer&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autotest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;autotest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Будет запущена асинхронная функция, которая отслеживает изменение исходных файлов и перезапускать все тесты, на которые влияют изменения.&lt;/p&gt;
+
+&lt;p&gt;Особенность здесь вот какая: автотесты работают не всегда предсказуемо, если “нахимичить” с переопределениями var-ов. Лечение здесь одно: перезагрузка всех “сломанных” неймспейсов либо использовать &lt;em&gt;lein midje&lt;/em&gt; из консоли.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Нетривиальной задачей является тестирование макросов, если их нужно поместить в секцию &lt;em&gt;provided&lt;/em&gt;. Дело в том, что Midje не принимает макросы в &lt;em&gt;provided&lt;/em&gt;. Поэтому, единственный способ – это раскрыть макрос macroexpand-ом и подставить в &lt;em&gt;provided&lt;/em&gt; тело макроса. Так, например, обычный &lt;em&gt;(taoensso.timbre/debug “hello”)&lt;/em&gt; в секции &lt;em&gt;provided&lt;/em&gt; будет выглядеть так: &lt;em&gt;(taoensso.timbre/-log! anything anything anything anything anything anything anything anything anything anything)&lt;/em&gt;. К сожалению, Midje не позволяет “сократить” все десять anything до какого-нибудь одного параметра.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Если необходимо протестировать асинхронную функцию, то следует воспользоваться макросом &lt;a href=&quot;http://clojuredocs.org/clojure.core/with-redefs&quot;&gt;with-redefs&lt;/a&gt;, чтобы переопределить её на что-то синхронное. Макрос &lt;em&gt;with-redefs&lt;/em&gt; не переопределяет другие макросы, поэтому и здесь нужно раскрывать их macroexpand-ом:&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;with-redefs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;future-call&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;future&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Точно также можно “нейтрализовать” log-и, чтобы они не отображались в выводе из тестов.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;with-redefs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log/-log!&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;log/debug&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;Выводы&lt;/h3&gt;
+
+&lt;p&gt;Midje отлично дополняет REPL-ориентированный подход Clojure. Если необходимо на скорую руку сделать черновик функционала, чтобы приблизительно представить возможную архитектуру, Midje предоставляет возможность использовать фиктивные функции и значения.&lt;/p&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;Литература&lt;/h3&gt;
+
+&lt;div id=&quot;book1&quot;&gt;1. Абельсон Х., Сассман Дж. 2.1 Введение в абстракцию данных. В кн.: Структура и интерпретация компьютерных программ, Москва, Добросвет, 2010, с.93.&lt;/div&gt;
+&lt;div id=&quot;book2&quot;&gt;2. Freeman S., Pryce N. Support for TDD with Mock Objects. In: Growing Object-Oriented Software, Guided by Tests. Location: Addison-Wesley, 2010, pp. 19-20.&lt;/div&gt;
+</description>
+        <pubDate>Sat, 02 Jul 2016 00:00:00 +0300</pubDate>
+        <link>http://clojure.by/articles/2016-07/midje-top-down</link>
+        <guid isPermaLink="true">http://clojure.by/articles/2016-07/midje-top-down</guid>
+        
+        <category>testing</category>
+        
+        <category>midje</category>
+        
+        
+        <category>разработка</category>
+        
+      </item>
     
       <item>
         <title>Запуск Clojure Blog</title>

@@ -202,10 +202,10 @@
 <p>1) Впринципе, позволить коду “упасть” с NPE из-за неверных аргументов – не самая плохая идея. Однако есть некоторая разница: функция “упадет” сразу, как только будет вызвана на nil, или же где-нибудь в середине, успев создать пару side effect-ов. Наверное, функция, не закончившая своё выполнение и записавшая промежуточные результаты куда-нибудь на диск, например, или в БД, – гораздо хуже, чем функция, “упавшая” сразу. Поэтому мой совет здесь – использовать <em>:pre</em> для предварительных проверок на nil. Например, так:</p>
 
 <figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">maynil</span><span class="w"> </span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w">
-  </span><span class="p">{</span><span class="no">:pre</span><span class="w"> </span><span class="p">[(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">nil?</span><span class="w"> </span><span class="n">v</span><span class="p">))]}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:pre</span><span class="w"> </span><span class="p">[(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">nil?</span><span class="w"> </span><span class="n">v</span><span class="p">))]}</span><span class="w">
 
-  </span><span class="p">(</span><span class="nb">when</span><span class="w"> </span><span class="n">v</span><span class="w">
-    </span><span class="n">v</span><span class="p">))</span></code></pre></figure>
+   </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w">
+ </span><span class="p">)</span></code></pre></figure>
 
 <p>2) Использовать <a href="http://www.yegor256.com/2016/01/26/defensive-programming.html">декораторы</a>, если нужно какое-то другое поведение, кроме NPE. В Clojure это значительно проще, чем в Java.</p>
 

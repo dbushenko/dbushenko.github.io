@@ -5,9 +5,100 @@
     <description>Блог о Clojure и других технологиях, связанных на Lisp.</description>
     <link>http://clojure.by/</link>
     <atom:link href="http://clojure.by/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 20 Jul 2016 09:21:41 +0300</pubDate>
-    <lastBuildDate>Wed, 20 Jul 2016 09:21:41 +0300</lastBuildDate>
+    <pubDate>Tue, 26 Jul 2016 15:52:15 +0300</pubDate>
+    <lastBuildDate>Tue, 26 Jul 2016 15:52:15 +0300</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>В Интернете кто-то не прав</title>
+        <description>&lt;p&gt;Книга Егора Бугаенко &lt;a href=&quot;http://www.yegor256.com/elegant-objects.html&quot;&gt;Elegant Object&lt;/a&gt; поднимает проблему поддерживаемости кода. Это большая редкость среди того огромного количества книг по программированию, которые учат просто писать код, не задумываясь о том, что с ним будет дальше.&lt;/p&gt;
+
+&lt;p&gt;Подход Егора очень необычен для программистов, никогда не имевших дело с функциональными языками. Честно говоря, до личной встречи с Егором я думал, что он позаимствовал большинство из своих решений в Haskell. Про одно из таких решений я бы хотел поговорить.&lt;/p&gt;
+
+&lt;p&gt;В &lt;a href=&quot;#link1&quot;&gt;[1]&lt;/a&gt; Егор рассуждает о том, почему не следует использовать разделяемые константы. Вкратце его аргументы такие. Разделяемые константы: 1) добавляют связанности между объектами; 2) не имеют никакой смысловой нагрузки, т.к. они оторваны от контекста; 3) не являются антропоморфными объектами.&lt;/p&gt;
+
+&lt;p&gt;Вообще, антропоморфность, наиболее ярко описанная в &lt;a href=&quot;#link2&quot;&gt;[2]&lt;/a&gt;, не является необходимым свойством объекта. Для Гради Буча, например, &lt;em&gt;объект&lt;/em&gt; – сущность обладающая поведением &lt;a href=&quot;#link3&quot;&gt;[3]&lt;/a&gt;. У констант поведения, понятное дело, нету.&lt;/p&gt;
+
+&lt;p&gt;Константы в Java – это просто разделяемые значения, которые применяются в различных частях программы. Поэтому Егор предлагает создавать объекты, инкапсулирующие константу внутри себя, и применяющие её при помощи собственных методов. Это такой &lt;em&gt;inversion of control&lt;/em&gt;, когда не ваш код использует константу, а обращаетесь к константному объекту, чтобы он что-то сделал для вас.&lt;/p&gt;
+
+&lt;p&gt;Вместо такого:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Constants&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NEWLINE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;\r\n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Constants&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NEWLINE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;должно быть такое:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NewLine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;\r\n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+   &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NewLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Это интересный подход, здорово напоминающий числа Чёрча &lt;a href=&quot;#link4&quot;&gt;[4]&lt;/a&gt;, где число представляется не значением &lt;em&gt;n&lt;/em&gt;, а функцией, которая применяется &lt;em&gt;n&lt;/em&gt; раз. Проблема такого подхода в том, что вместо нескольких классов, содержащих в себе нужные константы, появится гигантское количество константных классов, в которых будет крайне сложно разобраться.&lt;/p&gt;
+
+&lt;p&gt;Егор пишет: &lt;em&gt;“I do mean that the more classes you have in your application, the better its design and more maintainable it is”.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;На первый взгляд всё правильно: большое количество классов означает, что они будут маленькими, и их будет легко понять по отдельности. Но главная беда здесь в том, что разобраться, как их комбинировать, – &lt;em&gt;крайне сложно&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p class=&quot;notice&quot;&gt;В программировании мы всегда ищем золотую середину между большим и малым числом модулей, между большим и малым их размерами. Большое число малых модулей повышает читабельность каждого из них в отдельности, но сильно усложняет понимание того, как их комбинировать. Малое число больших модулей, напротив, легче понять, как комбинировать, нежели как они устроены внутри. Любая из этих двух крайностей сделает код нечитабельным.&lt;/p&gt;
+
+&lt;p&gt;Чтобы проиллюстрировать проблему на примере Java-кода, взгляните хотя бы, на код фреймворка &lt;a href=&quot;https://github.com/yegor256/takes/tree/master/src/main/java/org/takes/rq&quot;&gt;Takes&lt;/a&gt;, написанный как раз в таком стиле. Посмотрите и попробуйте разобраться, как сформировать нужный вам Request.&lt;/p&gt;
+
+&lt;p&gt;На конференции JavaDay’2016 в Минске Егору задали вопрос, как он борется вот с этой крайностью. Ответ Егора был такой, что если кому что не понятно во фреймворке, то ему задают вопросы и он тогда отвечает. И Егор признает проблему, но считает, что просто пока не разработали нужные инструменты, позволяющие быстро разобраться, как комбинировать такие маленькие классы.&lt;/p&gt;
+
+&lt;p&gt;В своей &lt;a href=&quot;/articles/2016-07/why-not-haskell&quot;&gt;статье&lt;/a&gt; о Haskell я уже писал, сколько проблем добавляет чрезмерное количество типов. Даже на то, чтобы разобраться с какой-нибудь маленькой и простой библиотекой может уйти уйма времени, если в ней используется пара десятков типов. А уж чтобы применить их правильно – так на это могут уйти часы борьбы с ошибками компиляции. Поэтому здесь из своего опыта я утверждаю, что &lt;em&gt;большое количество маленьких классов является не меньшей проблемой, чем малое количество больших классов&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Между прочим, в академической среде тоже осознали эту проблему. Ведутся уже даже не теоретические, а вполне практические разработки &lt;a href=&quot;#link5&quot;&gt;[5]&lt;/a&gt;, упрощающие поиск подходящего типа среди доступных. Но, прошу заметить, речь идет о совершенно новом языке программирования &lt;a href=&quot;http://idris-lang.org/&quot;&gt;Idris&lt;/a&gt;, чрезвычайно сложном и супер-модерновом. До Java эти разработки дойдут еще ох как не скоро, если вообще дойдут в силу своей непомерной сложности.&lt;/p&gt;
+
+&lt;p&gt;Есть и другой подход, полностью противоположный, ставящий во главу угла &lt;em&gt;простоту&lt;/em&gt;. В Clojure предлагается не создавать новые типы на всё подряд, а пользоваться существующими: списками, векторами, отображениями, множествами. Лично мне такой подход нравится намного больше по очевидной причине: чтобы воспользоваться какой-то функцией, не нужно бесконечно разбираться, какие типы или их комбинации к ней подходят. В Clojure часто достаточно взглянуть на один единственный пример – и уже всё понятно. Конечно, можно неправильно воспользоваться и стандартными типами, но это можно по крайней мере выяснить “методом научного тыка”. И несравненно дольше разбираться вот с такой, например, &lt;a href=&quot;https://github.com/yesodweb/wai/blob/master/warp/Network/Wai/Handler/Warp/HTTP2.hs&quot;&gt;сигнатурой&lt;/a&gt;, где каждый параметр представляет свой тип, с которым не сразу еще и поймёшь как работать:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-haskell&quot; data-lang=&quot;haskell&quot;&gt;&lt;span class=&quot;n&quot;&gt;http2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Connection&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;InternalInfo1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SockAddr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Transport&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;S&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Settings&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;BufSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IO&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ByteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Application&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IO&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;А вот пример чего-то похожего на Clojure, здесь вообще используются одни лишь hash-map-ы:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dummy-app&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:body&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;It works&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:status&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;jetty/run-jetty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dummy-app&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:port&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                             &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:h2c?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                             &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:h2?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                             &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:ssl?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                             &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:ssl-port&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5443&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                             &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:keystore&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                             &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:key-password&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;В целом, конечно, ‘Elegant Objects’ – очень хорошая книга для думающих программистов. Если честно, то у меня сложилось впечатление, что для ООП в понимании Егора язык Clojure или даже Haskell подходит гораздо больше, чем Java. Если переписать примеры из ‘Elegant Objects’ на Clojure, то, во-первых, и код станет короче, и, во-вторых, половину книги можно будет пропустить, т.к. в Clojure просто нету тех проблем, из-за которых книга и написана.&lt;/p&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;Литература&lt;/h3&gt;
+
+&lt;div id=&quot;link1&quot;&gt;1. Bugayenko Ye., 2.5. Don&#39;t use public constants. In: Elegant Objects v1.1. Location: CreateSpace, 2016, pp.64-73.&lt;/div&gt;
+&lt;div id=&quot;link2&quot;&gt;2. D.West, Observing the Object Difference. Location: Object Thinking, Microsoft Press, 2004.&lt;/div&gt;
+&lt;div id=&quot;link3&quot;&gt;3. Буч Г., Глава 2. Объектный подход. В кн.: Объектно-ориентированное проектирование с примерами применения, Москва, &quot;И.В.К&quot;, 1992, с. 38.
+&lt;div id=&quot;link4&quot;&gt;4. Пирс Б., 5.2. Программирование на языке лямбда-исчисления. В кн.: Типы в языках программирования, Москва, 2010, с.80&lt;/div&gt;
+&lt;div id=&quot;link5&quot;&gt;5. Brady E., 1.2.4 Incomplete Definitions: Working with Holes. Location: Type-Driven Development with Idris, Manning, 2016, pp.7-9 &lt;/div&gt;
+
+&lt;/div&gt;
+</description>
+        <pubDate>Tue, 26 Jul 2016 00:00:00 +0300</pubDate>
+        <link>http://clojure.by/articles/2016-07/elegant-objects</link>
+        <guid isPermaLink="true">http://clojure.by/articles/2016-07/elegant-objects</guid>
+        
+        <category>java</category>
+        
+        <category>критика</category>
+        
+        
+        <category>литература</category>
+        
+      </item>
     
       <item>
         <title>Clojure vs NULL</title>
@@ -156,10 +247,10 @@
         <link>http://clojure.by/articles/2016-07/clojure-vs-null</link>
         <guid isPermaLink="true">http://clojure.by/articles/2016-07/clojure-vs-null</guid>
         
-        <category>haskell</category>
-        
-        
         <category>tips&amp;tricks</category>
+        
+        
+        <category>разработка</category>
         
       </item>
     

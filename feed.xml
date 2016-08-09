@@ -5,9 +5,71 @@
     <description>Блог о Clojure и других технологиях, связанных на Lisp.</description>
     <link>http://clojure.by/</link>
     <atom:link href="http://clojure.by/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 26 Jul 2016 17:12:02 +0300</pubDate>
-    <lastBuildDate>Tue, 26 Jul 2016 17:12:02 +0300</lastBuildDate>
+    <pubDate>Tue, 09 Aug 2016 23:45:11 +0300</pubDate>
+    <lastBuildDate>Tue, 09 Aug 2016 23:45:11 +0300</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>Пара классных плагинов для Leiningen</title>
+        <description>&lt;p&gt;В разработке на Clojure я активно пользуюсь различными leiningen-плагинами. На вики leiningen-а ведется &lt;a href=&quot;https://github.com/technomancy/leiningen/wiki/Plugins&quot;&gt;список доступных плагинов&lt;/a&gt;, не полный, конечно, но там всё-таки есть наиболее популярные плагины. Ниже – те из них, которые лично мне здорово помогают в повседневном программировании.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://github.com/xsc/lein-ancient&quot;&gt;lein-ancient&lt;/a&gt; – самый офигенный плагин в списке. Умеет проверить все зависимости вашего проекта на устаревание. Если найдет устаревший – покажет для него самую свежую версию. Супер-удобная вещь, если хотите иметь в проекте всегда самые свежие библиотеки.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://github.com/weavejester/cljfmt&quot;&gt;lein-cljfmt&lt;/a&gt; – форматтер. Не только проверяет, насколько ваш код плохо отформатирован, но может и отформатировать его за вас. Совершенно необходимая вещь, если в команде больше одного человека.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://github.com/jonase/kibit&quot;&gt;lein-kibit&lt;/a&gt; – а это крайне полезная штука для новичков. Ищет способы как переписать ваш код наиболее идиоматичным образом. Например, выдает такие подсказки (заменяет if с двумя ветками на when с одной):&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;w&quot;&gt; 
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Consider&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;using&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;somefunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;my-result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instead&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;somefunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;my-result&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Не все подсказки kibit-а хороши. На мой взгляд, его желание заменить (not (empty? …)) на seq – не совсем правильное. Но в целом, kibit – прекрасный инструмент для поиска неидиоматичного кода.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/jonase/eastwood&quot;&gt;lein-eastwood&lt;/a&gt; – линтер. Ищет проблемы. Мне, например, нашел такое:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;w&quot;&gt; 
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ns&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;consumer.web&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;compojure.core&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:refer&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;routes&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defroutes&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PUT&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DELETE&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ANY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Здесь при редактировании файла я случайно удалил двоеточие перед словом require. Код вроде скомпилировался, и даже прошли какие-то тесты. Однако, это очевидно ошибка, которую мне обнаружил lein-eastwood.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://github.com/dakrone/lein-bikeshed&quot;&gt;lein-bikeshed&lt;/a&gt; – проверяет форматирование. Функционала поменьше, чем у lein-cljfmt, например lein-bikeshed не умеет исправлять неверное форматирование. Но зато находит слишком длинные строки и, возможно, что-то еще, что не проверяет lein-cljfmt.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://github.com/itang/lein-checkall&quot;&gt;lein-checkall&lt;/a&gt; – плагин для ленивых. Последовательно запускает команды “lein check &amp;amp;&amp;amp; lein kibit &amp;amp;&amp;amp; lein eastwood &amp;amp;&amp;amp; lein bikeshed”.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://github.com/gdeer81/lein-marginalia&quot;&gt;lein-marginallia&lt;/a&gt; – отличный способ сгенерировать документацию по внутренностям проекта. Изначально задумывался как плагин для поддержки “литературного программирования” (literate programming), придуманного Дональдом Кнутом. Не скажу, что он так уж следует идеям Д.Кнута, это, скорее, развитие идеи “литературного программирования” с оглядкой на потребности современного программирования. И да, конечно marginallia слизана с docco.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://github.com/weavejester/codox&quot;&gt;lein-codox&lt;/a&gt; – это утилита для генерирования документации по API проекта. Документация получается не такая подробная, как у marginallia, но и предназначена она для того, чтобы показать, как использовать библиотеку, а не как она устроена внутри.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;А какими плагинами пользуетесь вы? Пишите в комментах.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 09 Aug 2016 00:00:00 +0300</pubDate>
+        <link>http://clojure.by/articles/2016-08/lein-plugins</link>
+        <guid isPermaLink="true">http://clojure.by/articles/2016-08/lein-plugins</guid>
+        
+        <category>lein</category>
+        
+        
+        <category>разработка</category>
+        
+      </item>
     
       <item>
         <title>В Интернете кто-то не прав</title>

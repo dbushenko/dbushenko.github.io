@@ -5,9 +5,134 @@
     <description>Блог о Clojure и других технологиях, связанных на Lisp.</description>
     <link>http://clojure.by/</link>
     <atom:link href="http://clojure.by/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 09 Aug 2016 23:45:11 +0300</pubDate>
-    <lastBuildDate>Tue, 09 Aug 2016 23:45:11 +0300</lastBuildDate>
-    <generator>Jekyll v3.1.6</generator>
+    <pubDate>Mon, 01 May 2017 21:29:33 +0300</pubDate>
+    <lastBuildDate>Mon, 01 May 2017 21:29:33 +0300</lastBuildDate>
+    <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Идиомы Clojure</title>
+        <description>&lt;h3 id=&quot;проверка-на-пустой-список&quot;&gt;Проверка на пустой список&lt;/h3&gt;
+
+&lt;p&gt;Не используйте &lt;code class=&quot;highlighter-rouge&quot;&gt;(not (empty? coll))&lt;/code&gt;. Вместо этого следует применять &lt;code class=&quot;highlighter-rouge&quot;&gt;(seq coll)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;seq&lt;/code&gt; возвращает &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;, если коллекция пустая, иначе – возвращает саму эту коллекцию.&lt;/p&gt;
+
+&lt;p class=&quot;notice&quot;&gt;&lt;em&gt;Примечание переводчика&lt;/em&gt;: смотрите, как реализована функция &lt;code class=&quot;highlighter-rouge&quot;&gt;empty?&lt;/code&gt;: &lt;code class=&quot;highlighter-rouge&quot;&gt;(defn empty? [coll] (not (seq coll)))&lt;/code&gt;. Это значит, что конструкция &lt;code class=&quot;highlighter-rouge&quot;&gt;(not (empty? coll))&lt;/code&gt; будет преобразована в &lt;code class=&quot;highlighter-rouge&quot;&gt;(not (not (seq coll)))&lt;/code&gt;. Естественно, здесь лучше упростить до просто &lt;code class=&quot;highlighter-rouge&quot;&gt;(seq coll)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;выравнивание-результата-map-по-одному-уровню&quot;&gt;Выравнивание результата map по одному уровню&lt;/h3&gt;
+
+&lt;p&gt;Если результат вызова функции&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt; возвращает список списков, то для “выравнивания” списков следует использовать &lt;code class=&quot;highlighter-rouge&quot;&gt;mapcat&lt;/code&gt; вместо &lt;code class=&quot;highlighter-rouge&quot;&gt;(apply (concat (map...)))&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; ((0) (1) (2) (3) (4) (5) (6) (7) (8) (9))
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mapcat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p class=&quot;notice&quot;&gt;&lt;em&gt;Примечание переводчика&lt;/em&gt;: вот реализация &lt;code class=&quot;highlighter-rouge&quot;&gt;mapcat&lt;/code&gt;: &lt;code class=&quot;highlighter-rouge&quot;&gt;(defn mapcat [f &amp;amp; colls] (apply concat (apply map f colls)))&lt;/code&gt;. Т.е. &lt;code class=&quot;highlighter-rouge&quot;&gt;mapcat&lt;/code&gt; и есть &lt;code class=&quot;highlighter-rouge&quot;&gt;(apply concat (map ....))&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;отображения-maps-являются-функциями&quot;&gt;Отображения (maps) являются функциями&lt;/h3&gt;
+
+&lt;p&gt;Отображения, как и ключевые слова, являются функциями.&lt;/p&gt;
+
+&lt;p&gt;Для доступа к значениям отображения можно испозовать ключевое слово (keyword) вместо функции, само отображение или функцию &lt;code class=&quot;highlighter-rouge&quot;&gt;get&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:b&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; 1
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; 1
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; 1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Здесь наиболее предпочтительный вариант – средний, т.е. для доступа к значениям лучше использовать ключевое слово (keyword). Такой подход защитит вас от NullPointerException. Ключевое слово не может быть &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;, в то время, как отображение – может.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; CompilerException java.lang.IllegalArgumentException: Can't call nil, form: (nil :a)
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; nil
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;множества--тоже-функции&quot;&gt;Множества – тоже функции&lt;/h3&gt;
+
+&lt;p&gt;Как и отображения, множества также являются функциями. Их можно объявить при помощи функции &lt;code class=&quot;highlighter-rouge&quot;&gt;set&lt;/code&gt; или &lt;code class=&quot;highlighter-rouge&quot;&gt;#{}&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; :a
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; :b
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; nil
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; :a
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:b&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; :b
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:c&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; nil
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Множество возвращает значение, если оно там есть, иначе – &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;. Это свойство поможет нам делать некоторые интересные вещи.&lt;/p&gt;
+
+&lt;h3 id=&quot;не-используйте-contains-на-множествах&quot;&gt;Не используйте contains? на множествах&lt;/h3&gt;
+
+&lt;p&gt;Если у вас есть множество, не используйте &lt;code class=&quot;highlighter-rouge&quot;&gt;contains?&lt;/code&gt; чтобы проверить наличие элемента в нем. Просто используйте само множество как функцию.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+ &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Не надо так
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;contains?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; true
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Лучше вот так
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; :a
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p class=&quot;notice&quot;&gt;&lt;em&gt;Примечание переводчика&lt;/em&gt;: здесь я не согласен с автором. Дело в том, что &lt;code class=&quot;highlighter-rouge&quot;&gt;contains?&lt;/code&gt; корректно работает и на значениях &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;, например &lt;code class=&quot;highlighter-rouge&quot;&gt;(contains? nil :abc)&lt;/code&gt; просто вернёт &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;. Но если мы вызовем &lt;code class=&quot;highlighter-rouge&quot;&gt;(myset :abc)&lt;/code&gt;, а &lt;code class=&quot;highlighter-rouge&quot;&gt;myset&lt;/code&gt; будет равен &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;, то возникнет исключение. Правда &lt;code class=&quot;highlighter-rouge&quot;&gt;(:abc myset)&lt;/code&gt; отработает вполне нормально.&lt;/p&gt;
+
+&lt;h3 id=&quot;идиома-every-key-set-keys-my-map&quot;&gt;Идиома (every? key-set (keys my-map))&lt;/h3&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;every?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key-set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Эта идиома очень удобна для проверки JSON-ответов. С её помощью можно проверить, что в полученном ответе отображение содержит только ключи из некоторого множества.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endpoint-response&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Fat Tony&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                         &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:address-line-1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;123 Fake St.&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                         &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:zip&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;60606&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;expected-keys&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:address-line-1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:zip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;every?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;expected-keys&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endpoint-response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; true
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;conditionally-associng-onto-a-map&quot;&gt;Conditionally Assoc’ing Onto A Map&lt;/h3&gt;
+
+&lt;p&gt;Если вы используете на отображении макрос &lt;code class=&quot;highlighter-rouge&quot;&gt;-&amp;gt;&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;-&amp;gt;&amp;gt;&lt;/code&gt;, и вам нужно выполнить &lt;code class=&quot;highlighter-rouge&quot;&gt;assoc/dissoc&lt;/code&gt; в зависимости от некоторого условия, используйте &lt;code class=&quot;highlighter-rouge&quot;&gt;cond-&amp;gt;&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+ &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cond-&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;assoc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:b&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; {:a 1, :b 2}
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p class=&quot;notice&quot;&gt;&lt;em&gt;Примечание переводчика&lt;/em&gt;: думаю, здесь следует пояснить поведение макроса &lt;code class=&quot;highlighter-rouge&quot;&gt;cond-&amp;gt;&lt;/code&gt;. Как и &lt;code class=&quot;highlighter-rouge&quot;&gt;-&amp;gt;&lt;/code&gt;, первым аргументом он принимает некоторое начальное значение, а затем – список пар “значение / операция”. Операция над аргументом &lt;code class=&quot;highlighter-rouge&quot;&gt;cond-&amp;gt;&lt;/code&gt; выполняется только в том случае, если значение из пары является истиной. Таким образом, в приведенном примере операция &lt;code class=&quot;highlighter-rouge&quot;&gt;(assoc :b 2)&lt;/code&gt; выполнилась, потому что в паре &lt;code class=&quot;highlighter-rouge&quot;&gt;:a (assoc :b 2)&lt;/code&gt; значение &lt;code class=&quot;highlighter-rouge&quot;&gt;:a&lt;/code&gt; является истиной. Если бы там было &lt;code class=&quot;highlighter-rouge&quot;&gt;false (assoc :b 2)&lt;/code&gt;, то &lt;code class=&quot;highlighter-rouge&quot;&gt;(assoc :b 2)&lt;/code&gt; не выполнилось бы.&lt;/p&gt;
+
+&lt;p&gt;Оригинал статьи – &lt;a href=&quot;https://cb.codes/clojure-idioms/&quot;&gt;здесь&lt;/a&gt;. Перевод – Дмитрий Бушенко.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 01 May 2017 00:00:00 +0300</pubDate>
+        <link>http://clojure.by/articles/2017-05/style</link>
+        <guid isPermaLink="true">http://clojure.by/articles/2017-05/style</guid>
+        
+        <category>tips&amp;tricks</category>
+        
+        
+        <category>разработка</category>
+        
+      </item>
     
       <item>
         <title>Пара классных плагинов для Leiningen</title>
@@ -139,9 +264,9 @@
 
 &lt;p&gt;В целом, конечно, ‘Elegant Objects’ – очень хорошая книга для думающих программистов. Если честно, то у меня сложилось впечатление, что для ООП в понимании Егора язык Clojure или даже Haskell подходит гораздо больше, чем Java. Если переписать примеры из ‘Elegant Objects’ на Clojure, то, во-первых, и код станет короче, и, во-вторых, половину книги можно будет пропустить, т.к. в Clojure просто нету тех проблем, из-за которых книга и написана.&lt;/p&gt;
 
-&lt;h3 id=&quot;section&quot;&gt;Литература&lt;/h3&gt;
+&lt;h3 id=&quot;литература&quot;&gt;Литература&lt;/h3&gt;
 
-&lt;div id=&quot;link1&quot;&gt;1. Bugayenko Ye., 2.5. Don&#39;t use public constants. In: Elegant Objects v1.1. Location: CreateSpace, 2016, pp.64-73.&lt;/div&gt;
+&lt;div id=&quot;link1&quot;&gt;1. Bugayenko Ye., 2.5. Don't use public constants. In: Elegant Objects v1.1. Location: CreateSpace, 2016, pp.64-73.&lt;/div&gt;
 &lt;div id=&quot;link2&quot;&gt;2. D.West, Observing the Object Difference. Location: Object Thinking, Microsoft Press, 2004.&lt;/div&gt;
 &lt;div id=&quot;link3&quot;&gt;3. Буч Г., Глава 2. Объектный подход. В кн.: Объектно-ориентированное проектирование с примерами применения, Москва, &quot;И.В.К&quot;, 1992, с. 38.
 &lt;div id=&quot;link4&quot;&gt;4. Пирс Б., 5.2. Программирование на языке лямбда-исчисления. В кн.: Типы в языках программирования, Москва, 2010, с.80&lt;/div&gt;
@@ -166,7 +291,7 @@
         <title>Clojure vs NULL</title>
         <description>&lt;p&gt;Возвращаясь к Clojure после нескольких лет Haskell и Java снова переосмысливаю старые проблемы. Через призму нового опыта хочется поразмышлять о том, как справиться с набившей оскомину NullPointerException. В Haskell их не бывает, т.к. там нет такого понятия, как NULL. В Java NPE настолько распространенное явление, что его или отлавливают через try/catch или вообще не обращают на него внимания, позволяя пролезать ему на самый верх и в логи. Еще одной частой проблемой в Java являются лесенки из вложенных if-ов, проверяющих входные параметры на NULL. Давайте посмотрим, как дела с NPE в Clojure.&lt;/p&gt;
 
-&lt;h3 id=&quot;nullpointerexception-&quot;&gt;Почему возникает NullPointerException ?&lt;/h3&gt;
+&lt;h3 id=&quot;почему-возникает-nullpointerexception-&quot;&gt;Почему возникает NullPointerException ?&lt;/h3&gt;
 
 &lt;p&gt;Ответ на этот вопрос важен в контексте этой статьи. Дело в том, что &lt;em&gt;null&lt;/em&gt; в Java и &lt;em&gt;nil&lt;/em&gt; в Clojure, как ни странно, кардинально разные вещи. В Java null означает отсутствие объекта. Поэтому любой доступ к любому члену отсутствующего объекта не возможен, что и приводит к NPE. А в Clojure nil – это не отсутствие объекта, это &lt;a href=&quot;https://en.wikipedia.org/wiki/Null_Object_pattern&quot;&gt;NullObject&lt;/a&gt;, т.е. объект, на котором возможно вызывать любые функции, просто они будут возвращать пустые результаты.&lt;/p&gt;
 
@@ -189,7 +314,7 @@
 
 &lt;p&gt;В Clojure мы так часто взаимодействуетвуем с Java-кодом, что &lt;em&gt;nil&lt;/em&gt; приносит те же проблемы, что и &lt;em&gt;null&lt;/em&gt; в Java.&lt;/p&gt;
 
-&lt;h3 id=&quot;section&quot;&gt;Ну и в чем проблема?&lt;/h3&gt;
+&lt;h3 id=&quot;ну-и-в-чем-проблема&quot;&gt;Ну и в чем проблема?&lt;/h3&gt;
 
 &lt;p&gt;Теоретически, если выполнить все проверки во всех местах, где может возникнуть NPE, всё должно работать. Но читабельным &lt;a href=&quot;https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/CollectionUtils.java&quot;&gt;такой код&lt;/a&gt; никак не назовешь.&lt;/p&gt;
 
@@ -222,7 +347,7 @@
   &lt;li&gt;в возвращаемом значении функции&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;nil---&quot;&gt;Как бороться с &lt;em&gt;nil&lt;/em&gt; в аргументах функции&lt;/h3&gt;
+&lt;h3 id=&quot;как-бороться-с-nil-в-аргументах-функции&quot;&gt;Как бороться с &lt;em&gt;nil&lt;/em&gt; в аргументах функции&lt;/h3&gt;
 
 &lt;p&gt;Если коротко – &lt;em&gt;никак&lt;/em&gt;. Здесь я полностью согласен с Егором Бугаенко, который в &lt;a href=&quot;#book1&quot;&gt;[1]&lt;/a&gt; утверждает, что ни принимать null в аргументах, ни проверять на null аргументы функции не следует. Егор очень убедительно показывает, что это просто не ООП-стиль (по крайней мере в понимании Егора). Я же со своей стороны напомню, что такие проверки создают лишнюю ветку, а любой if значительно усложняет понимание кода. Вот две моих рекомендации по поводу nil в аргументах функции.&lt;/p&gt;
 
@@ -245,7 +370,7 @@
 
  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;maynil&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h3 id=&quot;nil----1&quot;&gt;Как бороться с &lt;em&gt;nil&lt;/em&gt; в теле функции&lt;/h3&gt;
+&lt;h3 id=&quot;как-бороться-с-nil-в-теле-функции&quot;&gt;Как бороться с &lt;em&gt;nil&lt;/em&gt; в теле функции&lt;/h3&gt;
 
 &lt;p&gt;Еще раз напомню, что проблема здесь – в возникновении “лесенок” из if-ов, проверяющих результаты промежуточных вычислений на nil.&lt;/p&gt;
 
@@ -288,7 +413,7 @@
 
 &lt;p&gt;Функция &lt;em&gt;ladder-2&lt;/em&gt; значительно проще, чем &lt;em&gt;ladder-1&lt;/em&gt;, т.к. в ней всего один “путь исполнения”, нет никаких ответвлений, ни одного if-а.&lt;/p&gt;
 
-&lt;h3 id=&quot;nil----2&quot;&gt;Как бороться с &lt;em&gt;nil&lt;/em&gt; в возвращаемом значении&lt;/h3&gt;
+&lt;h3 id=&quot;как-бороться-с-nil-в-возвращаемом-значении&quot;&gt;Как бороться с &lt;em&gt;nil&lt;/em&gt; в возвращаемом значении&lt;/h3&gt;
 
 &lt;p&gt;Главная мысль здесь – никогда не возвращайте nil.&lt;/p&gt;
 
@@ -296,11 +421,11 @@
 
 &lt;p&gt;2) Если результат вашей функции – единичный элемент, и функция определена не на всех значениях, то оберните её результат в Maybe. Тогда, если на каких-то аргументах функция не сможет вернуть значение, она вернет Nothing.&lt;/p&gt;
 
-&lt;h3 id=&quot;section-1&quot;&gt;Выводы&lt;/h3&gt;
+&lt;h3 id=&quot;выводы&quot;&gt;Выводы&lt;/h3&gt;
 
 &lt;p&gt;Проблема NPE в коде – это не проблема неотловленных исключений или ошибок в коде. Это проблема читабельности кода. Если корректность кода достигается за счет множества запутанных проверок, то такой код становится слишком сложно поддерживать. Пусть этот код и корректный, но что-то поменять в нем будет чрезвычайно сложно. Поэтому основные усилия при борьбе с NPE нужно прилагать к тому, чтобы корректный код стал читабельным. Добиться этого можно за счет 1) assert-ов в секции &lt;em&gt;:pre&lt;/em&gt;; 2) проверяющих декораторов; 3) использования монады Maybe.&lt;/p&gt;
 
-&lt;h3 id=&quot;section-2&quot;&gt;Литература&lt;/h3&gt;
+&lt;h3 id=&quot;литература&quot;&gt;Литература&lt;/h3&gt;
 
 &lt;div id=&quot;book1&quot;&gt;1. Bugayenko Ye., 3.3 Never accept NULL arguments. In: Elegant Objects. Location: CreateSpace, 2016, pp.146-152.&lt;/div&gt;
 
@@ -318,7 +443,7 @@
     
       <item>
         <title>Почему после двух лет Haskell я снова вернулся к Clojure</title>
-        <description>&lt;h3 id=&quot;haskell&quot;&gt;Как я попал в Haskell&lt;/h3&gt;
+        <description>&lt;h3 id=&quot;как-я-попал-в-haskell&quot;&gt;Как я попал в Haskell&lt;/h3&gt;
 
 &lt;p&gt;В процессе изучения Clojure еще в конце 2009-го года я стал всё чаще встречать упоминания о Haskell. В Clojure пришли хаскелисты и притащили туда монады, монадические комбинаторы парсеров, идею о борьбе с NPE через тип Maybe и многое другое. Упоминали также, что и сам Clojure подвергся очень сильному влиянию Haskell: все эти персистентные структуры данных, транзакционная память и, наверняка, многое другое позаимствовали в Haskell. Мне стало интересно, и я решил докопаться до истоков.&lt;/p&gt;
 
@@ -332,17 +457,17 @@
 
 &lt;p&gt;В 2014-м я выделил действительно много времени на изучение языка, а весь 2015-й и часть 2016-го – практиковался. Помимо множества хобби-проектов, вроде &lt;a href=&quot;https://github.com/dbushenko/trurl&quot;&gt;кодогенератора trurl&lt;/a&gt;, я написал и запустил во “внутренний” продакшен два single-page веб-приложения, где backend был полностью на Haskell, а frontend – на PureScript. Я это к тому, что все проблемы, которые я выявил при использовании Haskell, прошли через вот этот, пусть небольшой, но всё же опыт использования Haskell в реальных проектах.&lt;/p&gt;
 
-&lt;h3 id=&quot;c-----&quot;&gt;C чем я столкнулся на практике&lt;/h3&gt;
+&lt;h3 id=&quot;c-чем-я-столкнулся-на-практике&quot;&gt;C чем я столкнулся на практике&lt;/h3&gt;
 
 &lt;p&gt;Во время разработки двух внутренних проектов на Haskell я столкнулся с несколькими странностями, которые, на мой взгляд, здорово мешают использовать Haskell на реальных задачах. Здесь я хотел бы подчеркнуть, что мои задачи – это вовсе не разработка компиляторов или каких-то наукоёмких технологий. Всё проще: я делаю веб-сервисы и веб-приложения.&lt;/p&gt;
 
-&lt;h5 id=&quot;haskell--&quot;&gt;Haskell сложно отлаживать&lt;/h5&gt;
+&lt;h5 id=&quot;haskell-сложно-отлаживать&quot;&gt;Haskell сложно отлаживать&lt;/h5&gt;
 
 &lt;p&gt;К сожалению – это всё-таки имеет значение. Самый обычный дебаггер с самыми обычными брейкпоинтами в самом деле могут помочь &lt;em&gt;быстро&lt;/em&gt; решить проблему. Если у вас Java или C#, но никак не Haskell. Теоретически, брейкпоинты можно использовать и в Haskell, но это настолько сложно, что на практике вы будете использовать просто вывод в консоль при помощи &lt;em&gt;trace&lt;/em&gt; или &lt;em&gt;traceShow&lt;/em&gt;. Дело в том, что в Haskell программа – это длинная формула, да еще и ленивая. Иногда вам просто некуда будет этот брейкпоинт поставить!&lt;/p&gt;
 
 &lt;p&gt;А вторая проблема отладки – сложность контекстов. Это всё в теории выглядит хорошо – чистые функции, красивые типы. А на практике у вас будет гораздо чаще монада, завёрнутая в несколько слоёв монадических преобразователей, и понять где там что – та ещё задача. Там даже &lt;em&gt;trace&lt;/em&gt; влепить некуда, так что приходится полагаться в основном на юнит-тесты, которые, кстати, в таких сложных контекстах писать тоже сложно.&lt;/p&gt;
 
-&lt;h5 id=&quot;haskell------&quot;&gt;В Haskell нет нормального стека для веб-разработки&lt;/h5&gt;
+&lt;h5 id=&quot;в-haskell-нет-нормального-стека-для-веб-разработки&quot;&gt;В Haskell нет нормального стека для веб-разработки&lt;/h5&gt;
 
 &lt;p&gt;Тут я, конечно, рискую словить пару тухлых помидоров от любителей &lt;a href=&quot;http://www.yesodweb.com/&quot;&gt;Yesod&lt;/a&gt; или &lt;a href=&quot;haskell-servant.github.io/&quot;&gt;Servant&lt;/a&gt;, но всё же дайте мне пояснить мою позицию. Я, как инженер, терпеть не могу всякую “черную магию”. Если я не понимаю технологию или инструмент, то сам, по своей воле, ни за что его не выберу. Если я вынужден использовать фреймворк, в котором я не разбираюсь или не способен разобраться, то чем я отличаюсь от поклонников &lt;a href=&quot;http://lurkmore.to/%D0%9A%D1%83%D0%BB%D1%8C%D1%82_%D0%BA%D0%B0%D1%80%D0%B3%D0%BE&quot;&gt;карго-культа&lt;/a&gt;?&lt;/p&gt;
 
@@ -362,7 +487,7 @@
 
 &lt;p&gt;Надо сказать, что в Haskell вообще очень медленно проникают технологии из мейнстрима.&lt;/p&gt;
 
-&lt;h5 id=&quot;haskell-----&quot;&gt;В Haskell нет нормального доступа к БД&lt;/h5&gt;
+&lt;h5 id=&quot;в-haskell-нет-нормального-доступа-к-бд&quot;&gt;В Haskell нет нормального доступа к БД&lt;/h5&gt;
 
 &lt;p&gt;Есть, конечно, Persistent или mysql-simple / postgresql-simple и многое другое, в том числе – даже для NoSQL баз. И всё это совершенно неюзабельно. Ну вот, например, есть у вас сущность Cat, у неё есть свойства – id, head, tail. Представим себе веб-сервис, который создаёт котиков, передавая нам JSON примерно такого вида: {“head”: “white”, “tail”: “black”}. Пока что всё ОК. А теперь нам нужно его проапдейтить, и мы присылаем еще и его ID: {“id”: 17, “head”: “white”, “tail”: “black”}. Вот здесь уже начнутся проблемы. Даже если у нас и есть сущность вида&lt;/p&gt;
 
@@ -375,7 +500,7 @@
 
 &lt;p&gt;Про *-simple даже говорить не буду, для любого типа данных, у которых больше двух-трёх полей эти библиотеки использовать неудобно.&lt;/p&gt;
 
-&lt;h5 id=&quot;haskell-------&quot;&gt;Haskell – не для мейнстримных задач&lt;/h5&gt;
+&lt;h5 id=&quot;haskell--не-для-мейнстримных-задач&quot;&gt;Haskell – не для мейнстримных задач&lt;/h5&gt;
 
 &lt;p&gt;Самая моя большая претензия к Haskell – он решает не те задачи. Когда пишешь на Haskell основное внимание сосредотачиваешь на построении правильной модели данных, на выявление всех нужных типов данных и поиск различных закономерностей на этих типах.&lt;/p&gt;
 
@@ -385,7 +510,7 @@
 
 &lt;p&gt;Конечно, мне нравится Haskell, ведь программы на нём получаются и корректные, красивые. Но за такую роскошь приходится платить непомерную цену времени.&lt;/p&gt;
 
-&lt;h3 id=&quot;clojure&quot;&gt;Назад к Clojure&lt;/h3&gt;
+&lt;h3 id=&quot;назад-к-clojure&quot;&gt;Назад к Clojure&lt;/h3&gt;
 
 &lt;p&gt;Когда ко мне пришел новый проект, в котором нужно было связать сразу несколько технологий, я и сам не заметил, как сделал всё на Clojure. Я совершенно не собирался использовать его как основной язык проекта. Просто пока экспериментируешь в REPL программа пишется сама собой, в конце остаётся всего лишь более-менее нормально всё оформить, завернуть в Component и Compojure, добавить БД – и готово!&lt;/p&gt;
 
@@ -399,7 +524,7 @@
 
 &lt;p&gt;Горькая правда в том, что большинство моего кода просто не доживает до рефакторинга. Мне нужно решение задачи здесь и сейчас, потому что завтра этой задачи может и не быть вовсе. И далеко не факт, что написанный даже на Haskell код мне когда-нибудь придется рефакторить.&lt;/p&gt;
 
-&lt;h3 id=&quot;section&quot;&gt;Напоследок&lt;/h3&gt;
+&lt;h3 id=&quot;напоследок&quot;&gt;Напоследок&lt;/h3&gt;
 
 &lt;p&gt;После двух лет изучения Haskell я сильно разочарован. С другой стороны, конечно, я понимаю, что применил Haskell не в той области, для которой он предназначен.&lt;/p&gt;
 
@@ -431,8 +556,8 @@
 
 &lt;p&gt;Мы пишем тело &lt;em&gt;some-func&lt;/em&gt; так, будто &lt;em&gt;api-func1&lt;/em&gt; и &lt;em&gt;api-func2&lt;/em&gt; уже готовы, а затем пишем такой тест:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;facts&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;факты о функции &#39;some-func&#39;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&#39;some-func&#39; работает на несуществующем API&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;facts&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;факты о функции 'some-func'&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;'some-func' работает на несуществующем API&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
     
      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;some-func&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;arg2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;42&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 
@@ -445,14 +570,14 @@
 
 &lt;p&gt;Таким образом, мы можем вначале реализовать &lt;em&gt;some-func&lt;/em&gt;, и только потом – &lt;em&gt;api-func1&lt;/em&gt; и &lt;em&gt;api-func2&lt;/em&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;section&quot;&gt;Фиктивные функции и значения&lt;/h3&gt;
+&lt;h3 id=&quot;фиктивные-функции-и-значения&quot;&gt;Фиктивные функции и значения&lt;/h3&gt;
 
 &lt;p&gt;Показанный выше способ определения фиктивных функций работает в точности, как известный Java-фреймворк &lt;a href=&quot;http://mockito.org/&quot;&gt;Mockito&lt;/a&gt;. Но, помимо фиктивных функций Midje позволяет подставлять и фиктивные значения.&lt;/p&gt;
 
 &lt;p&gt;В примере выше указаны нормальные значения, которые передаются в функции и получаются из них. Но, если неважны конкретные значения, передаваемые в API, можно писать следующим образом.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;facts&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;факты о функции &#39;some-func&#39;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&#39;some-func&#39; работает на несуществующем API&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;facts&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;факты о функции 'some-func'&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;'some-func' работает на несуществующем API&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
     
      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;some-func&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;..ARG2..&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;..RESULT..&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 
@@ -463,13 +588,13 @@
 
 &lt;p&gt;Здесь &lt;em&gt;anything&lt;/em&gt; означает любой, неважно какой аргумент. &lt;em&gt;..ARG2..&lt;/em&gt; и &lt;em&gt;..RESULT..&lt;/em&gt; – метазначения. Их нужно использовать тогда, когда не важно содержимое, а важно только, чтобы оно было одинаковым везде, где используется одинаковое название метазначения.&lt;/p&gt;
 
-&lt;h3 id=&quot;section-1&quot;&gt;Некоторые особенности&lt;/h3&gt;
+&lt;h3 id=&quot;некоторые-особенности&quot;&gt;Некоторые особенности&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Midje предлагает очень удобный механизм &lt;a href=&quot;https://github.com/marick/Midje/wiki/Autotest&quot;&gt;автотестов&lt;/a&gt;. В REPL нужно сделать следующее:&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;midje.repl&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:refer&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autotest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;midje.repl&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:refer&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autotest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;autotest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Будет запущена асинхронная функция, которая отслеживает изменение исходных файлов и перезапускать все тесты, на которые влияют изменения.&lt;/p&gt;
@@ -495,11 +620,11 @@
    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;log/debug&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h3 id=&quot;section-2&quot;&gt;Выводы&lt;/h3&gt;
+&lt;h3 id=&quot;выводы&quot;&gt;Выводы&lt;/h3&gt;
 
 &lt;p&gt;Midje отлично дополняет REPL-ориентированный подход Clojure. Если необходимо на скорую руку сделать черновик функционала, чтобы приблизительно представить возможную архитектуру, Midje предоставляет возможность использовать фиктивные функции и значения.&lt;/p&gt;
 
-&lt;h3 id=&quot;section-3&quot;&gt;Литература&lt;/h3&gt;
+&lt;h3 id=&quot;литература&quot;&gt;Литература&lt;/h3&gt;
 
 &lt;div id=&quot;book1&quot;&gt;1. Абельсон Х., Сассман Дж. 2.1 Введение в абстракцию данных. В кн.: Структура и интерпретация компьютерных программ, Москва, Добросвет, 2010, с.93.&lt;/div&gt;
 &lt;div id=&quot;book2&quot;&gt;2. Freeman S., Pryce N. Support for TDD with Mock Objects. In: Growing Object-Oriented Software, Guided by Tests. Location: Addison-Wesley, 2010, pp. 19-20.&lt;/div&gt;

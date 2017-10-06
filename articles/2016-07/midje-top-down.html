@@ -10,17 +10,17 @@
   <meta name="description" content="Разработка в стиле 'top-down' или 'wishful thinking' -- это когда вы пишете программу на основе API, которого еще нет.Midje обеспечивает хорошую поддержку та...">
 
   <!-- CSS files -->
-  <link rel="stylesheet" href="http://clojure.by/css/font-awesome.min.css">
-  <link rel="stylesheet" href="http://clojure.by/css/main.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/font-awesome.min.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/main.css">
 
-  <link rel="canonical" href="http://clojure.by/articles/2016-07/midje-top-down">
-  <link rel="alternate" type="application/rss+xml" title="Clojure Blog" href="http://clojure.by/feed.xml " />
+  <link rel="canonical" href="http://localhost:4000/articles/2016-07/midje-top-down">
+  <link rel="alternate" type="application/rss+xml" title="Clojure Blog" href="http://localhost:4000/feed.xml " />
 
   <!-- Icons -->
   <!-- 16x16 -->
-  <link rel="shortcut icon" href="http://clojure.by/favicon.ico">
+  <link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
   <!-- 32x32 -->
-  <link rel="shortcut icon" href="http://clojure.by/favicon.png">
+  <link rel="shortcut icon" href="http://localhost:4000/favicon.png">
 </head>
 
 
@@ -32,26 +32,21 @@
 
 <div class="cover-card table-cell table-middle">
   
-  <img src="http://clojure.by/img/avatar.jpg" alt="" class="avatar">
+  <img src="http://localhost:4000/img/avatar.jpg" alt="" class="avatar">
   
-  <a href="http://clojure.by/" class="author_name">Всё о Clojure</a>
+  <a href="http://localhost:4000/" class="author_name">Всё о Clojure</a>
   <span class="author_job">и других lisp-ах</span>
   <span class="author_bio mbm">Clojure -- динамически-типизированный язык программирования общего назначения, работающий на JVM. Clojure является диалектом Lisp-а и использует его философию 'код-как-данные', а также механизм макросов. Clojure -- в основном функциональный язык с хорошей поддержкой неизменяемых персистентных структур данных.</span>
   <nav class="nav">
     <ul class="nav-list">
        
       <li class="nav-item">
-        <a href="http://clojure.by/archive/">Archive</a>
+        <a href="http://localhost:4000/archive/">Archive</a>
         <span>/</span>
       </li>
           
       <li class="nav-item">
-        <a href="http://clojure.by/categories/">Categories</a>
-        <span>/</span>
-      </li>
-            
-      <li class="nav-item">
-        <a href="http://clojure.by/tags/">Tags</a>
+        <a href="http://localhost:4000/tags/">Tags</a>
       </li>
        
     </ul>
@@ -103,10 +98,10 @@
     </div>
     <div class="col s12 m9">
       <div class="post-listing">
-        <a href="http://clojure.by/" >На главную</a><br/><br/>
+        <a href="http://localhost:4000/" >На главную</a><br/><br/>
 
 <div class="post-image-feature">
-  <img class="feature-image" src="http://clojure.by/img/2016-07-02.jpg" alt="Top-down разработка с Midje feature image">
+  <img class="feature-image" src="http://localhost:4000/img/2016-07-02.jpg" alt="Top-down разработка с Midje feature image">
 
   
 </div><!-- /.image-wrap -->
@@ -159,7 +154,7 @@
 
 <p>Таким образом, мы можем вначале реализовать <em>some-func</em>, и только потом – <em>api-func1</em> и <em>api-func2</em>.</p>
 
-<h3 id="фиктивные-функции-и-значения">Фиктивные функции и значения</h3>
+<h3 id="Фиктивные-функции-и-значения">Фиктивные функции и значения</h3>
 
 <p>Показанный выше способ определения фиктивных функций работает в точности, как известный Java-фреймворк <a href="http://mockito.org/">Mockito</a>. Но, помимо фиктивных функций Midje позволяет подставлять и фиктивные значения.</p>
 
@@ -177,7 +172,7 @@
 
 <p>Здесь <em>anything</em> означает любой, неважно какой аргумент. <em>..ARG2..</em> и <em>..RESULT..</em> – метазначения. Их нужно использовать тогда, когда не важно содержимое, а важно только, чтобы оно было одинаковым везде, где используется одинаковое название метазначения.</p>
 
-<h3 id="некоторые-особенности">Некоторые особенности</h3>
+<h3 id="Некоторые-особенности">Некоторые особенности</h3>
 
 <ul>
   <li>Midje предлагает очень удобный механизм <a href="https://github.com/marick/Midje/wiki/Autotest">автотестов</a>. В REPL нужно сделать следующее:</li>
@@ -209,11 +204,11 @@
    </span><span class="p">(</span><span class="nf">log/debug</span><span class="w"> </span><span class="s">"hello!"</span><span class="p">)</span><span class="w">
  </span><span class="p">)</span></code></pre></figure>
 
-<h3 id="выводы">Выводы</h3>
+<h3 id="Выводы">Выводы</h3>
 
 <p>Midje отлично дополняет REPL-ориентированный подход Clojure. Если необходимо на скорую руку сделать черновик функционала, чтобы приблизительно представить возможную архитектуру, Midje предоставляет возможность использовать фиктивные функции и значения.</p>
 
-<h3 id="литература">Литература</h3>
+<h3 id="Литература">Литература</h3>
 
 <div id="book1">1. Абельсон Х., Сассман Дж. 2.1 Введение в абстракцию данных. В кн.: Структура и интерпретация компьютерных программ, Москва, Добросвет, 2010, с.93.</div>
 <div id="book2">2. Freeman S., Pryce N. Support for TDD with Mock Objects. In: Growing Object-Oriented Software, Guided by Tests. Location: Addison-Wesley, 2010, pp. 19-20.</div>
@@ -261,8 +256,8 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="http://clojure.by/js/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="http://clojure.by/js/main.js"></script>
+  <script type="text/javascript" src="http://localhost:4000/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="http://localhost:4000/js/main.js"></script>
 
 
 </body>

@@ -10,17 +10,17 @@
   <meta name="description" content="Программы на Haskell получаются такие красивые именно потому, что основная задача Haskell-программиста -- создать полную, корректную, стройную, математичную ...">
 
   <!-- CSS files -->
-  <link rel="stylesheet" href="http://clojure.by/css/font-awesome.min.css">
-  <link rel="stylesheet" href="http://clojure.by/css/main.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/font-awesome.min.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/main.css">
 
-  <link rel="canonical" href="http://clojure.by/articles/2016-07/why-not-haskell">
-  <link rel="alternate" type="application/rss+xml" title="Clojure Blog" href="http://clojure.by/feed.xml " />
+  <link rel="canonical" href="http://localhost:4000/articles/2016-07/why-not-haskell">
+  <link rel="alternate" type="application/rss+xml" title="Clojure Blog" href="http://localhost:4000/feed.xml " />
 
   <!-- Icons -->
   <!-- 16x16 -->
-  <link rel="shortcut icon" href="http://clojure.by/favicon.ico">
+  <link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
   <!-- 32x32 -->
-  <link rel="shortcut icon" href="http://clojure.by/favicon.png">
+  <link rel="shortcut icon" href="http://localhost:4000/favicon.png">
 </head>
 
 
@@ -32,26 +32,21 @@
 
 <div class="cover-card table-cell table-middle">
   
-  <img src="http://clojure.by/img/avatar.jpg" alt="" class="avatar">
+  <img src="http://localhost:4000/img/avatar.jpg" alt="" class="avatar">
   
-  <a href="http://clojure.by/" class="author_name">Всё о Clojure</a>
+  <a href="http://localhost:4000/" class="author_name">Всё о Clojure</a>
   <span class="author_job">и других lisp-ах</span>
   <span class="author_bio mbm">Clojure -- динамически-типизированный язык программирования общего назначения, работающий на JVM. Clojure является диалектом Lisp-а и использует его философию 'код-как-данные', а также механизм макросов. Clojure -- в основном функциональный язык с хорошей поддержкой неизменяемых персистентных структур данных.</span>
   <nav class="nav">
     <ul class="nav-list">
        
       <li class="nav-item">
-        <a href="http://clojure.by/archive/">Archive</a>
+        <a href="http://localhost:4000/archive/">Archive</a>
         <span>/</span>
       </li>
           
       <li class="nav-item">
-        <a href="http://clojure.by/categories/">Categories</a>
-        <span>/</span>
-      </li>
-            
-      <li class="nav-item">
-        <a href="http://clojure.by/tags/">Tags</a>
+        <a href="http://localhost:4000/tags/">Tags</a>
       </li>
        
     </ul>
@@ -103,10 +98,10 @@
     </div>
     <div class="col s12 m9">
       <div class="post-listing">
-        <a href="http://clojure.by/" >На главную</a><br/><br/>
+        <a href="http://localhost:4000/" >На главную</a><br/><br/>
 
 <div class="post-image-feature">
-  <img class="feature-image" src="http://clojure.by/img/2016-07-09-head.jpg" alt="Почему после двух лет Haskell я снова вернулся к Clojure feature image">
+  <img class="feature-image" src="http://localhost:4000/img/2016-07-09-head.jpg" alt="Почему после двух лет Haskell я снова вернулся к Clojure feature image">
 
   
 </div><!-- /.image-wrap -->
@@ -133,7 +128,7 @@
   </header>
 
   <article class="post-content">
-    <h3 id="как-я-попал-в-haskell">Как я попал в Haskell</h3>
+    <h3 id="Как-я-попал-в-haskell">Как я попал в Haskell</h3>
 
 <p>В процессе изучения Clojure еще в конце 2009-го года я стал всё чаще встречать упоминания о Haskell. В Clojure пришли хаскелисты и притащили туда монады, монадические комбинаторы парсеров, идею о борьбе с NPE через тип Maybe и многое другое. Упоминали также, что и сам Clojure подвергся очень сильному влиянию Haskell: все эти персистентные структуры данных, транзакционная память и, наверняка, многое другое позаимствовали в Haskell. Мне стало интересно, и я решил докопаться до истоков.</p>
 
@@ -157,7 +152,7 @@
 
 <p>А вторая проблема отладки – сложность контекстов. Это всё в теории выглядит хорошо – чистые функции, красивые типы. А на практике у вас будет гораздо чаще монада, завёрнутая в несколько слоёв монадических преобразователей, и понять где там что – та ещё задача. Там даже <em>trace</em> влепить некуда, так что приходится полагаться в основном на юнит-тесты, которые, кстати, в таких сложных контекстах писать тоже сложно.</p>
 
-<h5 id="в-haskell-нет-нормального-стека-для-веб-разработки">В Haskell нет нормального стека для веб-разработки</h5>
+<h5 id="В-haskell-нет-нормального-стека-для-веб-разработки">В Haskell нет нормального стека для веб-разработки</h5>
 
 <p>Тут я, конечно, рискую словить пару тухлых помидоров от любителей <a href="http://www.yesodweb.com/">Yesod</a> или <a href="haskell-servant.github.io/">Servant</a>, но всё же дайте мне пояснить мою позицию. Я, как инженер, терпеть не могу всякую “черную магию”. Если я не понимаю технологию или инструмент, то сам, по своей воле, ни за что его не выберу. Если я вынужден использовать фреймворк, в котором я не разбираюсь или не способен разобраться, то чем я отличаюсь от поклонников <a href="http://lurkmore.to/%D0%9A%D1%83%D0%BB%D1%8C%D1%82_%D0%BA%D0%B0%D1%80%D0%B3%D0%BE">карго-культа</a>?</p>
 
@@ -177,7 +172,7 @@
 
 <p>Надо сказать, что в Haskell вообще очень медленно проникают технологии из мейнстрима.</p>
 
-<h5 id="в-haskell-нет-нормального-доступа-к-бд">В Haskell нет нормального доступа к БД</h5>
+<h5 id="В-haskell-нет-нормального-доступа-к-БД">В Haskell нет нормального доступа к БД</h5>
 
 <p>Есть, конечно, Persistent или mysql-simple / postgresql-simple и многое другое, в том числе – даже для NoSQL баз. И всё это совершенно неюзабельно. Ну вот, например, есть у вас сущность Cat, у неё есть свойства – id, head, tail. Представим себе веб-сервис, который создаёт котиков, передавая нам JSON примерно такого вида: {“head”: “white”, “tail”: “black”}. Пока что всё ОК. А теперь нам нужно его проапдейтить, и мы присылаем еще и его ID: {“id”: 17, “head”: “white”, “tail”: “black”}. Вот здесь уже начнутся проблемы. Даже если у нас и есть сущность вида</p>
 
@@ -200,7 +195,7 @@
 
 <p>Конечно, мне нравится Haskell, ведь программы на нём получаются и корректные, красивые. Но за такую роскошь приходится платить непомерную цену времени.</p>
 
-<h3 id="назад-к-clojure">Назад к Clojure</h3>
+<h3 id="Назад-к-clojure">Назад к Clojure</h3>
 
 <p>Когда ко мне пришел новый проект, в котором нужно было связать сразу несколько технологий, я и сам не заметил, как сделал всё на Clojure. Я совершенно не собирался использовать его как основной язык проекта. Просто пока экспериментируешь в REPL программа пишется сама собой, в конце остаётся всего лишь более-менее нормально всё оформить, завернуть в Component и Compojure, добавить БД – и готово!</p>
 
@@ -214,7 +209,7 @@
 
 <p>Горькая правда в том, что большинство моего кода просто не доживает до рефакторинга. Мне нужно решение задачи здесь и сейчас, потому что завтра этой задачи может и не быть вовсе. И далеко не факт, что написанный даже на Haskell код мне когда-нибудь придется рефакторить.</p>
 
-<h3 id="напоследок">Напоследок</h3>
+<h3 id="Напоследок">Напоследок</h3>
 
 <p>После двух лет изучения Haskell я сильно разочарован. С другой стороны, конечно, я понимаю, что применил Haskell не в той области, для которой он предназначен.</p>
 
@@ -264,8 +259,8 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="http://clojure.by/js/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="http://clojure.by/js/main.js"></script>
+  <script type="text/javascript" src="http://localhost:4000/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="http://localhost:4000/js/main.js"></script>
 
 
 </body>

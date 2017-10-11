@@ -202,16 +202,21 @@ Alternative flows:
           </span><span class="p">(</span><span class="nf">m/return</span><span class="w"> </span><span class="no">:done</span><span class="p">)))</span><span class="w">
 
 </span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">signup-full</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="p">]</span><span class="w">
-  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">-&gt;error</span><span class="w"> </span><span class="p">(</span><span class="nb">partial</span><span class="w"> </span><span class="n">show-error</span><span class="w"> </span><span class="s">"/signup"</span><span class="p">)]</span><span class="w">
-    </span><span class="p">(</span><span class="nf">case</span><span class="w"> </span><span class="p">(</span><span class="nf">signup-main</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w">
-      </span><span class="no">:check-non-empty</span><span class="w">   </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Some fields are empty!"</span><span class="p">)</span><span class="w">
-      </span><span class="no">:check-non-equals</span><span class="w">  </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Password does not match its confirmation!"</span><span class="p">)</span><span class="w">
-      </span><span class="no">:check-user-exists</span><span class="w"> </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"The user with the same email already exists!"</span><span class="p">)</span><span class="w">
-      </span><span class="no">:user-not-created</span><span class="w">  </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Could not create user!"</span><span class="p">)</span><span class="w">
-      </span><span class="no">:email-not-sent</span><span class="w">    </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Error while sending confirmation email!"</span><span class="p">)</span><span class="w">
-      </span><span class="no">:done</span><span class="w">              </span><span class="p">(</span><span class="nf">redirect</span><span class="w"> </span><span class="s">"/"</span><span class="p">)</span><span class="w">
-    
-      </span><span class="no">:default</span><span class="w">           </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Unknown error..."</span><span class="p">))))</span><span class="w">
+  </span><span class="p">(</span><span class="nf">either/branch</span><span class="w">
+   </span><span class="p">(</span><span class="nf">signup-main</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w">
+   
+   </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">left-value</span><span class="p">]</span><span class="w">
+     </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">-&gt;error</span><span class="w"> </span><span class="p">(</span><span class="nb">partial</span><span class="w"> </span><span class="n">pages/show-error</span><span class="w"> </span><span class="s">"/signup"</span><span class="p">)]</span><span class="w">
+       </span><span class="p">(</span><span class="nf">case</span><span class="w"> </span><span class="n">left-value</span><span class="w">
+         </span><span class="no">:check-non-empty</span><span class="w">   </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Some fields are empty!"</span><span class="p">)</span><span class="w">
+         </span><span class="no">:check-non-equals</span><span class="w">  </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Password does not match its confirmation!"</span><span class="p">)</span><span class="w">
+         </span><span class="no">:check-user-exists</span><span class="w"> </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"The user with the same email already exists!"</span><span class="p">)</span><span class="w">
+         </span><span class="no">:check-user-created</span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Could not create user!"</span><span class="p">)</span><span class="w">
+         </span><span class="no">:check-email-sent</span><span class="w">  </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Error while sending confirmation email!"</span><span class="p">)</span><span class="w">
+         </span><span class="no">:default</span><span class="w">           </span><span class="p">(</span><span class="nf">-&gt;error</span><span class="w"> </span><span class="s">"Unknown error..."</span><span class="p">))))</span><span class="w">
+
+   </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">right-value</span><span class="p">]</span><span class="w">
+     </span><span class="p">(</span><span class="nf">redirect</span><span class="w"> </span><span class="s">"/"</span><span class="p">))))</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Код функции <em>-&gt;either</em>:</p>
